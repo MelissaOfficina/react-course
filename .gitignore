@@ -1,0 +1,37 @@
+# Hidden folders
+.*/
+!.gitlab/
+!.husky/
+!.dockerfiles/
+
+# Backup files
+*~
+
+# Logs
+*.log
+
+# Node.js
+node_modules/
+
+# Test coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# NPM
+*.tgz
+
+# Yarn - package manager
+.yarnclean
+yarn.lock
+
+# PNPM - package manager
+shrinkwrap.yaml
+
+# Project
+build/
+*.env
+*.env.example
+*.env.local
+*.env.staging
