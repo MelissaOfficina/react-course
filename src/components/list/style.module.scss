@@ -1,0 +1,18 @@
+.list_item:nth-of-type(even) {
+  background-color: #b7c6d7;
+}
+.list_item{
+  padding: 16px;
+  background-color: #c6ccd3;
+  font-size: 16px;
+  display:flex;
+  gap:24px;
+  &:hover {
+    background-color: #a6b0be;
+  }
+}
+.textarea_block{
+  padding: 24px 0;
+  background-color: #e8ecf2;
+  font-size: 24px;
+}

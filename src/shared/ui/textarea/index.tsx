@@ -1,16 +1,8 @@
-/** @jsxImportSource @emotion/react */
 import { FC, forwardRef } from 'react';
-import { css } from '@emotion/react';
+import './style.module.scss';
 
 const Textarea: FC = forwardRef<HTMLTextAreaElement>((props, ref) => (
-  <textarea
-    ref={ref}
-    css={css`
-      width: 400px;
-      height: 100px;
-      padding: 10px 15px;
-    `}
-  />
+  <textarea ref={ref} />
 ));
 
 export default Textarea;

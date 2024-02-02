@@ -1,18 +1,21 @@
-/** @jsxImportSource @emotion/react */
 import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { Button, Textarea } from 'shared/ui';
-import { css, Global } from '@emotion/react';
+import style from './style.module.scss';
 
 import { IListType } from './types';
+import { useCookies } from 'react-cookie';
+import { Link } from 'react-router-dom';
 
 const List: FC<PropsWithChildren> = () => {
   const [list, setList] = useState<IListType[]>([]);
+  const [cookies, setCookie, removeCookie] = useCookies(['auth']);
   const inputRef = useRef<HTMLTextAreaElement>();
 
   useEffect(() => {
-    // eslint-disable-next-line functional/immutable-data
-    inputRef.current.value = '';
-  }, [list]); // Only re-run the effect if count changes
+    if (inputRef?.current?.value) {
+      inputRef.current.value = '';
+    }
+  }, [list]);
 
   const handleAddListElement = () => {
     if (!inputRef.current?.value) {
@@ -23,57 +26,46 @@ const List: FC<PropsWithChildren> = () => {
       {
         id: previous.length || 1,
         text: String(inputRef.current.value),
+        checked: false,
       },
     ]);
   };
 
-  return (
-    <div
-      css={css`
-        padding: 24px;
-      `}
-    >
+  const handleCheckList = (e) => {
+    console.log(e.target.dataset.key);
+  };
+
+  return cookies.auth ? (
+    <div>
       <h1>Добавить запись в список</h1>
-      <Global
-        styles={css`
-          .list-item:nth-of-type(even) {
-            background-color: #b7c6d7;
-          }
-        `}
-      />
       {list.map((item, index) => (
-        <div
-          className="list-item"
+        <label
+          htmlFor={`list_item_${index + 1}`}
+          className={style.list_item}
           key={`list_item_${index + 1}`}
-          css={css`
-            padding: 16px;
-            background-color: #c6ccd3;
-            font-size: 16px;
-            &:hover {
-              background-color: #a6b0be;
-            }
-          `}
         >
-          {index + 1}. {item.text}
-        </div>
+          <input
+            type="checkbox"
+            onClick={handleCheckList}
+            id={`list_item_${index + 1}`}
+            data-key={index + 1}
+            name="list[1]"
+          />
+          <span>
+            {index + 1}. {item.text}
+          </span>
+        </label>
       ))}
-      <div
-        css={css`
-          padding: 24px 0;
-          background-color: #e8ecf2;
-          font-size: 24px;
-        `}
-      >
-        <Textarea
-          ref={inputRef}
-          css={css`
-            width: 300px;
-            height: 100px;
-          `}
-        />
+      <div className={style.textarea_block}>
+        <Textarea ref={inputRef} />
         <Button onClick={handleAddListElement}>Добавить запись</Button>
       </div>
     </div>
+  ) : (
+    <>
+      <h1>Необходимо авторизоваться</h1>
+      <Link to="/auth">Перейти на страницу авторизации</Link>
+    </>
   );
 };
 

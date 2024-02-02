@@ -1,0 +1,15 @@
+.input_block{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:24px;
+  margin-bottom:15px;
+  align-items: center;
+}
+input{
+  border:1px solid #b7c6d7;
+  padding:0 12px;
+  line-height:40px
+}
+.form_block{
+  width:400px
+}

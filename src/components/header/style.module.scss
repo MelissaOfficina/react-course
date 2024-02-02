@@ -1,0 +1,22 @@
+.header{
+  display:flex;
+  gap:24px;
+  justify-content: space-between;
+  .links{
+    display:flex;
+    gap:24px;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+    &:hover {
+      color: gray;
+    }
+    &.active{
+      text-decoration: underline;
+    }
+  }
+}
+.header a.active {
+  text-decoration: underline;
+}

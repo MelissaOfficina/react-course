@@ -1,22 +1,29 @@
-import { FC } from 'react';
-import { css, Global } from '@emotion/react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import MainPage from 'pages/main';
+import './global.scss';
+import { Auth } from 'pages/auth';
+import Header from '../components/header';
+import Cabinet from 'pages/cabinet';
 
-import List from '../components/list';
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <MainPage />,
+  },
+  {
+    path: '/auth',
+    element: <Auth />,
+  },
+  {
+    path: '/cabinet',
+    element: <Cabinet />,
+  },
+]);
 
-const App: FC = () => (
+export const App = () => (
   <div>
-    <Global
-      styles={css`
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: Inter, Arial, sans-serif;
-          background-color: #e8ecf2;
-        },
-      `}
-    />
-    <List />
+    <RouterProvider router={router} />
   </div>
 );
 
-export default App;
+//роутинги, сделать страницу авторизации на отдельном компоненте
