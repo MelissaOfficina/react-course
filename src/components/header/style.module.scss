@@ -5,17 +5,18 @@
   .links{
     display:flex;
     gap:24px;
-  }
-  a {
-    text-decoration: none;
-    color: black;
-    &:hover {
-      color: gray;
+    a {
+      text-decoration: none;
+      color: black;
+      &:hover {
+        color: gray;
+      }
+      &.active{
+        text-decoration: underline;
+      }
     }
-    &.active{
-      text-decoration: underline;
-    }
   }
+
 }
 .header a.active {
   text-decoration: underline;

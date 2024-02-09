@@ -1,8 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import MainPage from 'pages/main';
 import './global.scss';
-import { Auth } from 'pages/auth';
-import Header from '../components/header';
+import Auth from 'pages/auth';
 import Cabinet from 'pages/cabinet';
 
 const router = createBrowserRouter([
@@ -25,5 +24,3 @@ export const App = () => (
     <RouterProvider router={router} />
   </div>
 );
-
-//роутинги, сделать страницу авторизации на отдельном компоненте

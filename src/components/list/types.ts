@@ -3,3 +3,9 @@ export interface IListType {
   text: string;
   checked: boolean;
 }
+
+export interface IInputs {
+  login: string;
+  password: string;
+  text: string;
+}

@@ -1,55 +1,61 @@
-import { FC, PropsWithChildren, useEffect, useRef, useState } from 'react';
-import { Button, Textarea } from 'shared/ui';
-import style from './style.module.scss';
-
-import { IListType } from './types';
-import { useCookies } from 'react-cookie';
+import { FC, PropsWithChildren, useId } from 'react';
 import { Link } from 'react-router-dom';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useAppDispatch, useAppSelector } from 'app/store/hooks';
+
+import style from './style.module.scss';
+import { IInputs } from './types';
+import { add, check } from './list-slice';
 
 const List: FC<PropsWithChildren> = () => {
-  const [list, setList] = useState<IListType[]>([]);
-  const [cookies, setCookie, removeCookie] = useCookies(['auth']);
-  const inputRef = useRef<HTMLTextAreaElement>();
+  const userLogin = useAppSelector((state) => state.auth.login);
+  const dispatch = useAppDispatch();
+  const lists = useAppSelector((state) => state.list);
+  const {
+    register,
+    handleSubmit,
+    resetField,
+    formState: { errors },
+  } = useForm<IInputs>();
 
-  useEffect(() => {
-    if (inputRef?.current?.value) {
-      inputRef.current.value = '';
-    }
-  }, [list]);
+  const getUID = () => Date.now().toString(36);
 
-  const handleAddListElement = () => {
-    if (!inputRef.current?.value) {
-      return;
+  const onSubmit: SubmitHandler<IInputs> = (data) => {
+    if (data.text.length > 0) {
+      const ids = getUID();
+      dispatch(
+        add({
+          id: ids,
+          text: String(data.text),
+          checked: false,
+        }),
+      );
+      resetField('text');
     }
-    setList((previous) => [
-      ...previous,
-      {
-        id: previous.length || 1,
-        text: String(inputRef.current.value),
-        checked: false,
-      },
-    ]);
   };
 
-  const handleCheckList = (e) => {
-    console.log(e.target.dataset.key);
+  const handleCheckList = (event) => {
+    event.target.parentElement.style = 'text-decoration:line-through';
+    setTimeout(() => {
+      dispatch(check(event.target.dataset.key));
+    }, 500);
   };
 
-  return cookies.auth ? (
+  return userLogin ? (
     <div>
       <h1>Добавить запись в список</h1>
-      {list.map((item, index) => (
+      {lists.map((item, index) => (
         <label
-          htmlFor={`list_item_${index + 1}`}
+          htmlFor={`list_item_${item.id}`}
           className={style.list_item}
-          key={`list_item_${index + 1}`}
+          key={`list_item_${item.id}`}
         >
           <input
             type="checkbox"
             onClick={handleCheckList}
-            id={`list_item_${index + 1}`}
-            data-key={index + 1}
-            name="list[1]"
+            id={`list_item_${item.id}`}
+            data-key={item.id}
+            name="list[]"
           />
           <span>
             {index + 1}. {item.text}
@@ -57,8 +63,19 @@ const List: FC<PropsWithChildren> = () => {
         </label>
       ))}
       <div className={style.textarea_block}>
-        <Textarea ref={inputRef} />
-        <Button onClick={handleAddListElement}>Добавить запись</Button>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <textarea {...register('text', { required: true, maxLength: 200 })} />
+          <div>
+            {errors.text && (
+              <span className="error">
+                Необходимо заполнить поле. Количество символов не более 200
+              </span>
+            )}
+          </div>
+          <div>
+            <button type="submit">Добавить запись</button>
+          </div>
+        </form>
       </div>
     </div>
   ) : (

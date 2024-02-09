@@ -1,24 +1,41 @@
-import style from './style.module.scss';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
+import { useAppDispatch, useAppSelector } from 'app/store/hooks';
+import { logout } from 'pages/auth/auth-slice';
+import { FC } from 'react';
 
-const Header = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['auth']);
+import style from './style.module.scss';
+
+const Header: FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const handlerLogout = () => {
-    setCookie('auth', false);
+  const userLogin = useAppSelector((state) => state.auth.login);
+  const handleLogout = () => {
+    dispatch(logout());
     navigate('/');
   };
   return (
     <div className={style.header}>
       <div className={style.links}>
-        <NavLink to="/">Главная</NavLink>
-        {!cookies.auth && <NavLink to="/auth">Авторизация</NavLink>}
-        {cookies.auth && <NavLink to="/cabinet">Личный кабинет</NavLink>}
+        <NavLink
+          to="/"
+          className={({ isActive }) => (isActive ? 'active' : '')}
+        >
+          Главная
+        </NavLink>
+        {!userLogin && (
+          <NavLink
+            to="/auth"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Авторизация
+          </NavLink>
+        )}
+        {userLogin && <NavLink to="/cabinet">Личный кабинет</NavLink>}
       </div>
-      {cookies.auth && (
+      {userLogin && (
         <div>
-          Вы авторизованы. <Link onClick={handlerLogout}>Выйти?</Link>
+          Вы авторизованы как <strong>{userLogin}</strong>.{' '}
+          <Link onClick={handleLogout}>Выйти?</Link>
         </div>
       )}
     </div>

@@ -1,14 +1,14 @@
 import { FC, useEffect } from 'react';
-import List from '../../components/list';
-import Header from '../../components/header';
-import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from 'app/store/hooks';
+
+import Header from '../../components/header';
 
 const Cabinet: FC = () => {
-  const [cookie, setCookie] = useCookies(['auth']);
+  const userLogin = useAppSelector((state) => state.auth.login);
   const navigate = useNavigate();
   useEffect(() => {
-    if (!cookie.auth) {
+    if (!userLogin) {
       navigate('/auth');
     }
   });
